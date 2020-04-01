@@ -2,11 +2,13 @@
 
 #[cfg(test)]
 mod tests {
+    // use super::*;
 
     #[test]
-    fn initialize_type_capacity() {
-        let array: [i32; 3] = [0; 3];
+    fn fixed_length_capacity() {
+        let array: [i32; 3] = [0; 3]; // init val zero, capacity of 3
         assert_eq!([0, 0], &array[1..]);
+        // array.
     }
 
     #[test]
@@ -51,5 +53,17 @@ mod tests {
         fn update(array : &mut [i32;3]) { array[0] = 50; }
         assert_eq!(50, arr[0]);
     }
+
+    #[test]
+    fn slice_pattern() {
+        let [john, roa] = ["John".to_string(), "Roa".to_string()];
+        assert_eq!(john, "John");
+        assert_eq!(roa, "Roa");
+    }
+
+    // #[test]
+    // fn using_macro() {
+    //     let arr = arr!["A"; 33];
+    // }
 }
 

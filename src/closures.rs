@@ -24,7 +24,7 @@ mod tests {
     #[test]
     fn test_simple_closure_written_out() {
         let is_even = |x:u64| -> bool { x % 3 == 0 };
-        assert_eq!(is_even(3), true);
+        assert_eq!(is_even(3), true); 
     }
 
 }

@@ -5,10 +5,6 @@
 
 // Slicing -----------------------------------------------------
 pub fn slicing() {
-    println!("\n==============================================================");
-    println!("Slicing");
-    println!("==============================================================");
-
     slicing_arrays();
     slicing_and_references();
 }
@@ -53,8 +49,35 @@ fn prt(a: &[f64]) {
 mod tests {
     // use super::*;
 
-    // #[test]
-    // fn () {
-    //     assert_eq!(a.iter().fold(1, |a, b| a * b), 210);
-    // }
+    #[test]
+    fn slicing_arrays() {
+        let a: [i32; 4] = [1, 2, 3, 4]; // Parent Array
+        let b: &[i32] = &a;             // Slicing whole array
+        assert_eq!(b, [1,2,3,4]);
+    }
+
+    #[test]
+    fn slicing_array_range() {
+        let arr: [i32; 4] = [1, 2, 3, 4]; // Parent Array        
+        let c = &arr[0..4]; // From 0th position to 4th(excluding)
+        let d = &arr[..];   // Slicing whole array
+        let e = &arr[1..3]; // [2, 3]
+        let f = &arr[1..];  // [2, 3, 4]
+        let g = &arr[..3];  // [1, 2, 3]
+
+        assert_eq!(c, [1,2,3,4]);
+        assert_eq!(d, [1,2,3,4]);
+        assert_eq!(e, [2,3]);
+        assert_eq!(f, [2,3,4]);
+        assert_eq!(g, [1,2,3]);
+    }
+
+    #[test]
+    fn string_slice() {
+        let s = String::from("hello world");
+        let hello = &s[0..5];
+        let world = &s[6..11];
+        assert_eq!(hello, "hello");
+        assert_eq!(world, "world");
+    }
 }

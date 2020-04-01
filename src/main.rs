@@ -12,6 +12,15 @@ mod iterator;
 mod oracle_usage;
 mod closures;
 mod modules;
+mod structs;
+mod implementation;
+mod generics;
+mod rc;
+mod pattern;
+mod conversions;
+mod conditionals;
+mod loops;
+
 
 fn main() {
     println!("Hello, world!");
