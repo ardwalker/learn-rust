@@ -39,7 +39,6 @@ fn main() {
 
 
     pattern_matching();
-    references::references();
     vectors::vectors();
     slicing::slicing();
     strings::strings();

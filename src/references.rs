@@ -1,164 +1,28 @@
 
-use std::collections::HashMap;
-
-// Non-owning pointer types: references
-// which have no effect on their referents’ lifetimes
-
-// A shared reference lets you read but not modify its referent.
-// However, you can have as many shared references to a particular value at a time as you like.
-// The expression &e yields a shared reference to e’s value;
-// if e has the type T, then &e has the type &T, pronounced “ref T”. Shared references are Copy.
-
-// If you have a mutable reference to a value, you may both read and modify the value.
-// However, you may not have any other references of any sort to that value active at the same time.
-// The expression &mut e yields a mutable reference to e’s value; you write its type as &mut T
-// which is pronounced “ref mute T”. Mutable references are not Copy.
-
-type Table = HashMap<String, Vec<String>>;
-
-
-pub fn references() {
-    println!("\n==============================================================");
-    println!("References");
-    println!("==============================================================");
-
-    let s1 = String::from("hello");
-    let len = calculate_length(&s1);
-    println!("The length of '{}' is {}.", s1, len);
-
-    borrow_mutable_reference();
-    assigning_references();
-    comparing_references();
-    reference_and_address_equality();
-    arbitrary_expressions();
-    reference_scope();
-    table();
-}
-
-
-// The . operator can also implicitly borrow a reference to its left operand,
-// if needed for a method call. For example, Vec’s sort method takes a mutable
-// reference to the vector, so the two calls shown here are equivalent
-fn borrow_mutable_reference() {
-    let mut v = vec![1973, 1968];
-    v.sort();           // implicitly borrows a mutable reference to v
-    (&mut v).sort();    // equivalent; much uglier
-}
-
-
-fn assigning_references() {
-    let x = 10;
-    let y = 20;
-    let mut r = &x;
-
-    let b = true;
-
-    if b { r = &y; } // r now points to y
-
-    assert!(*r == 10 || *r == 20);
-}
-
-// == operator follows all the references and performs the comparison on their
-// final targets, x and y.
-fn comparing_references() {
-    let x = 10;
-    let y = 10;
-
-    // reference
-    let rx = &x;
-    let ry = &y;
-
-    // reference to a reference
-    let rrx = &rx;
-    let rry = &ry;
-
-    assert!(rrx <= rry);
-    assert!(rrx == rry);
-}
-
-
-fn reference_and_address_equality() {
-    let x = 10;
-    let y = 10;
-
-    // reference
-    let rx = &x;
-    let ry = &y;
-
-    assert!(rx == ry);                      // their referents are equal
-    assert!(!std::ptr::eq(rx, ry));   // but occupy different addresses
-}
-
-
-// Whereas C and C++ only let you apply the & operator to certain kinds of expressions,
-// Rust lets you borrow a reference to the value of any sort of expression at all:
-fn arbitrary_expressions() {
-    fn factorial(n: usize) -> usize {
-        (1..n+1).fold(1, |a, b| a * b)
-    }
-    let r = &factorial(6);
-    assert_eq!(r + &1009, 1729);
-}
-
-// Rust’s complaint is that x lives only until the end of the inner block,
-// whereas the reference remains alive until the end of the outer block,
-// making it a dangling pointer, which is verboten.
-fn reference_scope() {
-    let _r;
-    {
-        let x = 1;
-        _r = &x;
-    }
-    //assert_eq!(*_r, 1);  // bad: reads memory `x` used to occupy
-    //         ^^ borrowed value does not live long enough
-}
-
-
-fn calculate_length(s: &String) -> usize {
-    s.len()
-}
-
-fn table() {
-    let mut table = Table::new();
-    table.insert("Gesualdo".to_string(),
-                 vec!["many madrigals".to_string(),
-                      "Tenebrae Responsoria".to_string()]);
-    table.insert("Caravaggio".to_string(),
-                 vec!["The Musicians".to_string(),
-                      "The Calling of St. Matthew".to_string()]);
-    table.insert("Cellini".to_string(),
-                 vec!["Perseus with the head of Medusa".to_string(),
-                      "a salt cellar".to_string()]);
-
-    sort_works(&mut table);
-    show(&table);
-}
-
-fn sort_works(table: &mut Table) {
-    for (_artist, works) in table {
-        works.sort();
-    }
-}
-
-fn show(table: &Table) {
-    for (artist, works) in table {
-        println!("works by {}:", artist);
-        for work in works {
-            println!("  {}", work);
-        }
-    }
-}
-
 
 #[cfg(test)]
 mod test {
 
     #[test]
-    fn simple_shared_ref() {
-        let x = 10;
-        let r = &x;        // &x is a shared reference to x
-        assert_eq!(*r, 10);      // explicitly dereference r
+    fn references1() {
+        let mut numbers = [3, 1, 2];
+        numbers.sort(); // implicitly borrows a reference 
+        (&mut numbers).sort();
     }
+
+    #[test]
+    fn references2() {
+        fn calculate_length(s: &String) -> usize { s.len() }
+        let s1 = String::from("hello");
+        assert_eq!(calculate_length(&s1), 5); // takes a reference so no copy needed
+    }
+
+    #[test]
+    fn references3() {
+        let x = 10;
+        let r = &x;         // &x is a shared reference to x
+        assert_eq!(*r, 10); // explicitly dereference r
+    }    
 
     #[test]
     fn explicit_deref() {
@@ -172,17 +36,88 @@ mod test {
     // left operand, if needed
     #[test]
     fn implicit_deref() {
-        struct Anime { name: &'static str, _bechdel_pass: bool };
-        let aria = Anime { name: "Aria", _bechdel_pass: true };
-        let anime_ref = &aria;
-        assert_eq!(anime_ref.name, "Aria"); // Implicit dereference
+        struct Anime { name: String, _bechdel_pass: bool };
+        let aria = Anime { name: "Aria".to_string(), _bechdel_pass: true };
+        let aref = &aria;
+        assert_eq!(aref.name, "Aria"); // Implicit dereference
+        assert_eq!((*aref).name, "Aria"); // explicit dereference
     }
 
     #[test]
+    fn double_deref() {
+        fn is_ten(val: &i32) -> bool { 
+            *val == 10  // note no double deref required
+        }
+        let x = 10;
+        let r = &x;
+        let rr = &r;                    // `rr` is a `&&x`
+        assert_eq!(**rr, 10);           // double deref ** 
+        assert_eq!(*rr, &10);           // double deref ** 
+        assert!(**rr == 10);           // double deref ** 
+        assert_eq!(is_ten(rr), true);   // comparison operator traverse reference chain
+    }
+
+
+    #[test]
+    fn assigning_references() {
+        let x = 10;
+        let y = 20;
+
+        let mut _r = &x;
+        _r = &y; // r now points to y
+
+        assert_eq!(*_r, 20);
+    }
+
+
+    // The . operator can also implicitly borrow a reference to its left operand,
+    // if needed for a method call. For example, Vec’s sort method takes a mutable
+    // reference to the vector, so the two calls shown here are equivalent
+    #[test]
     fn mutable_ref() {
         let mut v = vec![1973, 1968];
-        v.sort();  // implicit ref ; (&mut v).sort() is explicit version
+        v.sort();  // implicit ref ; 
+        // (&mut v).sort() is explicit version, which is a not as nice
         assert_eq!(v , vec![1968,1973] );
+    }
+
+
+
+    // == operator follows all the references and performs the comparison on their
+    // final targets, x and y.
+    #[test]
+    fn comparing_references() {
+        let x = 10;
+        let y = 10;
+
+        let rx = &x;
+        let ry = &y;
+
+        let rrx = &rx; // reference to a reference
+        let rry = &ry;
+
+        assert!(rrx == rry);
+    }
+
+    #[test]
+    fn reference_and_address_equality() {
+        let x = 10;
+        let y = 10;
+
+        let rx = &x;
+        let ry = &y;
+
+        assert!(rx == ry);                        // their referents are equal
+        assert_eq!(std::ptr::eq(rx, ry), false);  // but occupy different addresses
+    }
+
+    #[test]
+    fn arbitrary_expressions() {
+        fn factorial(n: usize) -> usize {
+            (1..n+1).fold(1, |a, b| a * b)
+        }
+        let r = &factorial(6);
+        assert_eq!(r + &1009, 1729);
     }
 
 }
