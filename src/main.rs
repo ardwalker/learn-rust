@@ -20,6 +20,8 @@ mod pattern;
 mod conversions;
 mod conditionals;
 mod loops;
+mod lifetimes;
+mod mutability;
 
 
 fn main() {

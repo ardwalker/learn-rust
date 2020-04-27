@@ -27,4 +27,26 @@ mod tests {
         assert_eq!(is_even(3), true); 
     }
 
+    fn call_twice<F>(closure: F) where F: FnOnce() {
+        closure();
+        // closure();
+    }
+
+    #[test]
+    fn drop_closure() {
+        let my_string = "hello".to_string();
+        let f = || drop(my_string);
+
+        call_twice(f);
+        // assert f implements FnOnce
+    }
+
+    #[test]
+    fn mutable_closure() {
+        let mut i = 0;
+        let mut myfn = || -> i32 { i += 1; i };
+        let x = myfn();
+        assert_eq!(i, 1);
+        assert_eq!(x, 1);
+    }
 }

@@ -7,8 +7,27 @@ mod tests {
     #[test]
     fn fixed_length_capacity() {
         let array: [i32; 3] = [0; 3]; // init val zero, capacity of 3
-        assert_eq!([0, 0], &array[1..]);
-        // array.
+        assert_eq!([0, 0, 0], array);
+    }
+
+    #[test]
+    fn access_array_elements() {
+        let a = [1, 2, 3, 4, 5];
+
+        let first = a[0];
+        let second = a[1];
+        assert_eq!(first, 1);
+        assert_eq!(second, 2);
+    }
+
+
+    #[test]
+    #[should_panic(expected = "index out of bounds")]
+    fn invalid_array_access() {
+        let a = [1, 2, 3, 4, 5];
+        let index = 10;
+    
+        let _element = a[index];
     }
 
     #[test]
@@ -16,7 +35,7 @@ mod tests {
         let mut array: [i32; 3] = [0; 3];
         array[1] = 1;
         array[2] = 2;
-        assert_eq!([1, 2], &array[1..]);
+        assert_eq!([0, 1, 2], array);
     }
 
     #[test]
