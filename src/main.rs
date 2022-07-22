@@ -22,6 +22,11 @@ mod conditionals;
 mod loops;
 mod lifetimes;
 mod mutability;
+mod options;
+mod errors;
+mod enums;
+mod futures_mod;
+mod asyncs;
 
 
 fn main() {

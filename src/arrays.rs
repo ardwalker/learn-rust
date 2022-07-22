@@ -2,13 +2,20 @@
 
 #[cfg(test)]
 mod tests {
-    // use super::*;
 
     #[test]
-    fn fixed_length_capacity() {
-        let array: [i32; 3] = [0; 3]; // init val zero, capacity of 3
-        assert_eq!([0, 0, 0], array);
+    fn array_literals_init() {
+        let a1: [i32; 3]  = [0; 3]; // init val zero, capacity of 3
+        let a2: [u8; 3]   = [1, 2, 3];
+        let a3: [&str; 3] = ["1", "2", "3"];        
+        let a4: [String; 3] = [String::from("1"),String::from("2"),String::from("3")];
+    
+        assert_eq!([0, 0, 0], a1);
+        assert_eq!([1, 2, 3], a2);
+        assert_eq!(["1", "2", "3"], a3);
+        assert_eq!(["1", "2", "3"], a4);
     }
+    
 
     #[test]
     fn access_array_elements() {
