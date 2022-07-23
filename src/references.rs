@@ -26,7 +26,7 @@ mod test {
 
     #[test]
     fn explicit_deref() {
-        struct Anime { name: &'static str, _bechdel_pass: bool };
+        struct Anime { name: &'static str, _bechdel_pass: bool }
         let aria = Anime { name: "Aria: The Animation", _bechdel_pass: true };
         let anime_ref = &aria;
         assert_eq!((*anime_ref).name, "Aria: The Animation");
@@ -36,7 +36,7 @@ mod test {
     // left operand, if needed
     #[test]
     fn implicit_deref() {
-        struct Anime { name: String, _bechdel_pass: bool };
+        struct Anime { name: String, _bechdel_pass: bool }
         let aria = Anime { name: "Aria".to_string(), _bechdel_pass: true };
         let aref = &aria;
         assert_eq!(aref.name, "Aria"); // Implicit dereference

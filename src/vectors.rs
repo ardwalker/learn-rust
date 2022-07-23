@@ -4,7 +4,7 @@ pub fn vectors() {
     let f: Vec<String> = std::env::args().skip(1).collect();
 
     for i in f {
-        i.into_boxed_str();
+        println!("i: {:?}", i.into_boxed_str());
     }
 }
 

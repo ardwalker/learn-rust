@@ -28,14 +28,14 @@ mod tests {
     }
 
 
-    #[test]
-    #[should_panic(expected = "index out of bounds")]
-    fn invalid_array_access() {
-        let a = [1, 2, 3, 4, 5];
-        let index = 10;
+    // #[test]
+    // #[should_panic(expected = "index out of bounds")]
+    // fn invalid_array_access() {
+    //     let a = [1, 2, 3, 4, 5];
+    //     let index = 10;
     
-        let _element = a[index];
-    }
+    //     let _element = a[index];
+    // }
 
     #[test]
     fn initialize_mutable() {
